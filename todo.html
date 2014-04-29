@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Work Todo List</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+  <!-- ========= -->
+  <!-- Your CSS -->
+  <!-- ========= -->
+  <style type="text/css">
+    #todoapp {
+      max-width: 600px;
+      margin: 0 auto 100px;
+    }
+
+    header {
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 7em;
+      position: absolute;
+      letter-spacing: -5px;
+      top: -120px;
+      width: 1000px;
+    }
+
+    header p {
+      margin-top: 120px;
+    }
+
+    #main {
+      margin-top: 20px;
+    }
+
+    #todo-menu {
+      text-align: center;
+    }
+
+    #todo-menu a.active {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    #new-todo {
+      font-size: 1.5em;
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+    }
+
+    #todo-list {
+      padding: 0;
+    }
+
+    #todo-list li {
+      padding: 20px;
+      margin: 3px 0 10px;
+      display: block;
+      background-color: #ededed;
+      font-size: 1.2em;
+    }
+
+    #todo-list li.completed {
+      opacity: .6;
+    }
+
+    #todo-list li.completed label {
+      text-decoration: line-through;
+    }
+
+    #todo-list li.news { border-bottom: 10px solid #065A98;}
+    #todo-list li.ads { border-bottom: 10px solid #7b7b7b;}
+    #todo-list li.george { border-bottom: 10px solid #74A33C;}
+    #todo-list li.kiwi { border-bottom: 10px solid #8AD680;}
+    #todo-list li.mai { border-bottom: 10px solid #FFDE00;}
+    #todo-list li.mw { border-bottom: 10px solid #CC1040;}
+    #todo-list li.more { border-bottom: 10px solid #D6162F;}
+    #todo-list li.rl { border-bottom: 10px solid #C41230;}
+    #todo-list li.rls { border-bottom: 10px solid #C51230;}
+    #todo-list li.stat { border-bottom: 10px solid #aaaaaa;}
+    #todo-list li.breeze { border-bottom: 10px solid #0DAB7D;}
+    #todo-list li.edge { border-bottom: 10px solid #009DE1;}
+    #todo-list li.rock { border-bottom: 10px solid #ED1C24;}
+    #todo-list li.sound { border-bottom: 10px solid #E1B232;}
+    #todo-list li.tv3 { border-bottom: 10px solid #FFFFFF;}
+
+    #todo-list label {
+      background-color: rgba(255,255,255,.5);
+      padding: 10px;
+      width: 50%;
+    }
+
+    #todo-list input,
+    #todo-list select {
+      padding: 10px;
+    }
+
+    button.destroy, button.close {
+      float: right;
+      font-size: 21px;
+      font-weight: bold;
+      line-height: 1;
+      color: #000;
+      padding: 10px;
+      text-shadow: 0 1px 0 #fff;
+      opacity: .2;
+      border: none;
+    }
+
+    button.destroy {
+      width:41px;
+      text-indent: -999em;
+      background-image: url('img/close.png');
+      background-position: center;
+      background-size: 80%;
+      background-repeat: no-repeat;
+      background-color: transparent;
+    }
+
+    #todo-list input.edit,
+    #todo-list button.close,
+    #todo-list select,
+    #todo-list .editing label {
+      display: none; /* Hides label text when .editing*/
+    }
+    #todo-list .editing select,
+    #todo-list .editing button.close,
+    #todo-list .editing input.edit {
+      display: inline; /* Shows input text box when .editing*/
+    }
+  </style>
+
+</head>
+<body>
+  <!-- ========= -->
+  <!-- Your HTML -->
+  <!-- ========= -->
+
+  <section id="todoapp">
+    <header>
+      <h1>Local Todo List</h1>
+      <p>This todo list uses local storage so it will only remember what you store in this browser.</p>
+      <input id="new-todo" placeholder="What needs to be done?" autofocus/>
+      <div id="todo-menu">
+        <a href="#/" class="active">Show All</a> | 
+        <a href="#/pending">Pending</a> | 
+        <a href="#/completed">Completed</a>
+      </div>
+    </header>
+    <section id="main">
+      <ul id="todo-list"></ul>
+    </section>
+  </section>
+
+  <script type="text/template" id="item-template">
+    <div class="view">
+      <input class="toggle" type="checkbox" <%= completed ? 'checked' : '' %>>
+      <label><%- title %></label>
+      <input class="edit" value="<%- title %>">
+      <select class="brand">
+        <option value="null" <%= brand ? '' : 'selected' %> disabled>Select...</option>
+        <option value="news" <%= (brand == 'news') ? 'selected' : '' %>>3 News</option>
+        <option value="ads" <%= (brand == 'ads') ? 'selected' : '' %>>Advertising</option>
+        <option value="george" <%= (brand == 'george') ? 'selected' : '' %>>George FM</option>
+        <option value="kiwi" <%= (brand == 'kiwi') ? 'selected' : '' %>>Kiwi FM</option>
+        <option value="mai" <%= (brand == 'mai') ? 'selected' : '' %>>Mai FM</option>
+        <option value="mw" <%= (brand == 'mw') ? 'selected' : '' %>>Mediaworks</option>
+        <option value="more" <%= (brand == 'more') ? 'selected' : '' %>>More FM</option>
+        <option value="rl" <%= (brand == 'rl') ? 'selected' : '' %>>RadioLive</option>
+        <option value="rls" <%= (brand == 'rls') ? 'selected' : '' %>>RadioLive Sport</option>
+        <option value="stat" <%= (brand == 'stat') ? 'selected' : '' %>>Static</option>
+        <option value="breeze" <%= (brand == 'breeze') ? 'selected' : '' %>>The Breeze</option>
+        <option value="edge" <%= (brand == 'edge') ? 'selected' : '' %>>The Edge</option>
+        <option value="rock" <%= (brand == 'rock') ? 'selected' : '' %>>The Rock</option>
+        <option value="sound" <%= (brand == 'sound') ? 'selected' : '' %>>The Sound</option>
+        <option value="tv3" <%= (brand == 'tv3') ? 'selected' : '' %>>TV3 - FOUR</option>
+      </select>
+      <button class="destroy">Remove</button>
+      <button class="close">Done</button>
+    </div>
+  </script>
+
+  <!-- ========= -->
+  <!-- Libraries -->
+  <!-- ========= -->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.3/underscore-min.js" type="text/javascript"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min.js" type="text/javascript"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.0/backbone.localStorage-min.js" type="text/javascript"></script>  
+  
+  <!-- =============== -->
+  <!-- Javascript code -->
+  <!-- =============== -->
+  <script type="text/javascript">
+    // your JS code goes herevar
+
+    $('#todo-menu a').on('click', function(){
+      $('#todo-menu a').removeClass('active');
+      $(this).addClass('active');
+    })
+
+    app = {}; // create namespace for our app
+    
+    //--------------
+    // Models
+    //--------------
+    app.Todo = Backbone.Model.extend({
+      defaults: {
+        title: '',
+        completed: false,
+        brand: ''
+      },
+      toggle: function(){
+        this.save({ completed: !this.get('completed')});
+      }
+    });
+
+    //--------------
+    // Collections
+    //--------------
+    app.TodoList = Backbone.Collection.extend({
+      model: app.Todo,
+      localStorage: new Store("backbone-todo"),
+      completed: function() {
+        return this.filter(function( todo ) {
+          return todo.get('completed');
+        });
+      },
+      remaining: function() {
+        return this.without.apply( this, this.completed() );
+      }      
+    });
+
+    // instance of the Collection
+    app.todoList = new app.TodoList();
+
+    //--------------
+    // Views
+    //--------------
+    
+    // renders individual todo items list (li)
+    app.TodoView = Backbone.View.extend({
+      tagName: 'li',
+      template: _.template($('#item-template').html()),
+      render: function(){
+        this.$el.html(this.template(this.model.toJSON()));
+        this.$el.addClass(this.model.attributes.brand);
+        if(this.model.attributes.completed == true) {
+          this.$el.addClass('completed');
+        }
+        this.input = this.$('.edit');
+        return this; // enable chained calls
+      },
+      initialize: function(){
+        this.model.on('change', this.render, this);
+        this.model.on('destroy', this.remove, this); // remove: Convenience Backbone's function for removing the view from the DOM.
+      },      
+      events: {
+        'dblclick label' : 'edit',
+        'keypress .edit' : 'updateOnEnter',
+        'click .close': 'close',
+        'click .toggle': 'toggleCompleted',
+        'click .destroy': 'destroy'
+      },
+
+      edit: function(){
+        this.$el.addClass('editing');
+        this.input.focus();
+      },
+
+      close: function(){
+        var value = this.input.val().trim();
+        var newBrand = this.$('.brand').val();
+        if(value) {
+          this.model.save({title: value});
+          this.model.save({brand: newBrand});
+        }
+        this.$el.removeClass();
+        this.$el.addClass(newBrand);
+      },
+
+      updateOnEnter: function(e){
+        if(e.which == 13){
+          this.close();
+        }
+      },
+
+      toggleCompleted: function(){
+        this.model.toggle();
+        if(this.model.attributes.completed == true) {
+          this.$el.addClass('completed');
+        } else {
+          this.$el.removeClass('completed');
+        }
+      },
+
+      destroy: function(){
+        var deleted = this;
+        this.$el.slideUp(400, function (){
+          deleted.model.destroy();
+        })
+      } 
+    });
+
+    // renders the full list of todo items calling TodoView for each one.
+    app.AppView = Backbone.View.extend({
+      el: '#todoapp',
+      initialize: function () {
+        this.input = this.$('#new-todo');
+        app.todoList.on('add', this.addAll, this);
+        app.todoList.on('reset', this.addAll, this);
+        app.todoList.fetch(); // Loads list from local storage
+      },
+      events: {
+        'keypress #new-todo': 'createTodoOnEnter'
+      },
+      createTodoOnEnter: function(e){
+        if ( e.which !== 13 || !this.input.val().trim() ) { // ENTER_KEY = 13
+          return;
+        }
+        app.todoList.create(this.newAttributes());
+        this.input.val(''); // clean input box
+      },
+      addOne: function(todo){
+        var view = new app.TodoView({model: todo});
+        $('#todo-list').append(view.render().el);
+      },
+      addAll: function(){
+        this.$('#todo-list').html(''); // clean the todo list
+        // filter todo item list
+        switch(window.filter){
+          case 'pending':
+            _.each(app.todoList.remaining(), this.addOne);
+            break;
+          case 'completed':
+            _.each(app.todoList.completed(), this.addOne);
+            break;            
+          default:
+            app.todoList.each(this.addOne, this);
+            break;
+        }
+      },
+      newAttributes: function(){
+        return {
+          title: this.input.val().trim(),
+          completed: false,
+          brand: ''
+        }
+      }
+    });
+
+    //--------------
+    // Routers
+    //--------------
+    
+    app.Router = Backbone.Router.extend({
+      routes: {
+        '*filter' : 'setFilter'
+      },
+      setFilter: function(params) {
+        console.log('app.router.params = ' + params);
+        window.filter = params.trim() || '';
+        app.todoList.trigger('reset');
+      }
+    });     
+
+    //--------------
+    // Initializers
+    //--------------   
+
+    app.router = new app.Router();
+    Backbone.history.start();    
+    app.appView = new app.AppView();
+
+    /*
+    var AppView = Backbone.View.extend({
+
+      el: '#container',
+
+      template: _.template("Hello <%= who %>"),
+      initialize: function(){
+        this.render();
+      },
+
+      render: function(){
+        this.$el.html(this.template({who: 'Josh!'}));
+      }
+
+    });
+
+    var appView = new AppView();
+    */
+
+
+  </script>
+  
+</body>
+</html>
