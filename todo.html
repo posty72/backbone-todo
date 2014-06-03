@@ -12,7 +12,7 @@
   <style type="text/css">
     #todoapp {
       max-width: 600px;
-      margin: 0 auto 100px;
+      margin: 0 auto;
     }
 
     header {
@@ -20,19 +20,17 @@
     }
 
     header h1 {
-      font-size: 7em;
-      position: absolute;
-      letter-spacing: -5px;
-      top: -120px;
-      width: 1000px;
+      font-size: 3em;
+      letter-spacing: -3px;
+      text-align: center;
     }
 
     header p {
-      margin-top: 120px;
+      font-size: .8em;
     }
 
     #main {
-      margin-top: 20px;
+      margin-top: 10px;
     }
 
     #todo-menu {
@@ -56,7 +54,7 @@
     }
 
     #todo-list li {
-      padding: 20px;
+      padding: 5px 20px;
       margin: 3px 0 10px;
       display: block;
       background-color: #ededed;
@@ -64,33 +62,48 @@
     }
 
     #todo-list li.completed {
-      opacity: .6;
+      opacity: .2;
+    }
+
+    #todo-list li.editing {
+      opacity: 1;
     }
 
     #todo-list li.completed label {
       text-decoration: line-through;
     }
 
-    #todo-list li.news { border-bottom: 10px solid #065A98;}
-    #todo-list li.ads { border-bottom: 10px solid #7b7b7b;}
-    #todo-list li.george { border-bottom: 10px solid #74A33C;}
-    #todo-list li.kiwi { border-bottom: 10px solid #8AD680;}
-    #todo-list li.mai { border-bottom: 10px solid #FFDE00;}
-    #todo-list li.mw { border-bottom: 10px solid #CC1040;}
-    #todo-list li.more { border-bottom: 10px solid #D6162F;}
-    #todo-list li.rl { border-bottom: 10px solid #C41230;}
-    #todo-list li.rls { border-bottom: 10px solid #C51230;}
-    #todo-list li.stat { border-bottom: 10px solid #aaaaaa;}
-    #todo-list li.breeze { border-bottom: 10px solid #0DAB7D;}
-    #todo-list li.edge { border-bottom: 10px solid #009DE1;}
-    #todo-list li.rock { border-bottom: 10px solid #ED1C24;}
-    #todo-list li.sound { border-bottom: 10px solid #E1B232;}
-    #todo-list li.tv3 { border-bottom: 10px solid #FFFFFF;}
+    #todo-list li.News { border-bottom: 10px solid #065A98;}
+    #todo-list li.Advertising { border-bottom: 10px solid #7b7b7b;}
+    #todo-list li.GeorgeFM { border-bottom: 10px solid #74A33C;}
+    #todo-list li.KiwiFM { border-bottom: 10px solid #8AD680;}
+    #todo-list li.MaiFM { border-bottom: 10px solid #FFDE00;}
+    #todo-list li.Mediaworks { border-bottom: 10px solid #CC1040;}
+    #todo-list li.MoreFM { border-bottom: 10px solid #D6162F;}
+    #todo-list li.RadioLive { border-bottom: 10px solid #C41230;}
+    #todo-list li.RadioLiveSport { border-bottom: 10px solid #C51230;}
+    #todo-list li.Static { border-bottom: 10px solid #aaaaaa;}
+    #todo-list li.TheBreeze { border-bottom: 10px solid #0DAB7D;}
+    #todo-list li.TheEdge { border-bottom: 10px solid #009DE1;}
+    #todo-list li.TheRock { border-bottom: 10px solid #ED1C24;}
+    #todo-list li.TheSound { border-bottom: 10px solid #E1B232;}
+    #todo-list li.TV3 { border-bottom: 10px solid #000000;}
 
     #todo-list label {
-      background-color: rgba(255,255,255,.5);
-      padding: 10px;
-      width: 50%;
+      padding: 5px 10px;
+      margin: 0;
+      width: 75%;
+      text-transform: capitalize;
+    }
+
+    #todo-list label span {
+      font-size: .8em;
+      color: #7b7b7b;
+      display: block;
+      float: right;
+      width: 100px;
+      font-weight: lighter;
+      font-style: italic;
     }
 
     #todo-list input,
@@ -111,7 +124,7 @@
     }
 
     button.destroy {
-      width:41px;
+      width:21px;
       text-indent: -999em;
       background-image: url('img/close.png');
       background-position: center;
@@ -141,8 +154,8 @@
 
   <section id="todoapp">
     <header>
-      <h1>Local Todo List</h1>
-      <p>This todo list uses local storage so it will only remember what you store in this browser.</p>
+      <h1>Todo List</h1>
+      <!--<p>This todo list uses local storage so it will only remember what you store in this browser.</p>-->
       <input id="new-todo" placeholder="What needs to be done?" autofocus/>
       <div id="todo-menu">
         <a href="#/" class="active">Show All</a> | 
@@ -158,25 +171,25 @@
   <script type="text/template" id="item-template">
     <div class="view">
       <input class="toggle" type="checkbox" <%= completed ? 'checked' : '' %>>
-      <label><%- title %></label>
+      <label> <%- title %><span><%- brand %></span></label>
       <input class="edit" value="<%- title %>">
       <select class="brand">
         <option value="null" <%= brand ? '' : 'selected' %> disabled>Select...</option>
-        <option value="news" <%= (brand == 'news') ? 'selected' : '' %>>3 News</option>
-        <option value="ads" <%= (brand == 'ads') ? 'selected' : '' %>>Advertising</option>
-        <option value="george" <%= (brand == 'george') ? 'selected' : '' %>>George FM</option>
-        <option value="kiwi" <%= (brand == 'kiwi') ? 'selected' : '' %>>Kiwi FM</option>
-        <option value="mai" <%= (brand == 'mai') ? 'selected' : '' %>>Mai FM</option>
-        <option value="mw" <%= (brand == 'mw') ? 'selected' : '' %>>Mediaworks</option>
-        <option value="more" <%= (brand == 'more') ? 'selected' : '' %>>More FM</option>
-        <option value="rl" <%= (brand == 'rl') ? 'selected' : '' %>>RadioLive</option>
-        <option value="rls" <%= (brand == 'rls') ? 'selected' : '' %>>RadioLive Sport</option>
-        <option value="stat" <%= (brand == 'stat') ? 'selected' : '' %>>Static</option>
-        <option value="breeze" <%= (brand == 'breeze') ? 'selected' : '' %>>The Breeze</option>
-        <option value="edge" <%= (brand == 'edge') ? 'selected' : '' %>>The Edge</option>
-        <option value="rock" <%= (brand == 'rock') ? 'selected' : '' %>>The Rock</option>
-        <option value="sound" <%= (brand == 'sound') ? 'selected' : '' %>>The Sound</option>
-        <option value="tv3" <%= (brand == 'tv3') ? 'selected' : '' %>>TV3 - FOUR</option>
+        <option value="News" <%= (brand == 'News') ? 'selected' : '' %>>3 News</option>
+        <option value="Advertising" <%= (brand == 'Advertising') ? 'selected' : '' %>>Advertising</option>
+        <option value="George FM" <%= (brand == 'George FM') ? 'selected' : '' %>>George FM</option>
+        <option value="Kiwi FM" <%= (brand == 'Kiwi FM') ? 'selected' : '' %>>Kiwi FM</option>
+        <option value="Mai FM" <%= (brand == 'Mai FM') ? 'selected' : '' %>>Mai FM</option>
+        <option value="Mediaworks" <%= (brand == 'Mediaworks') ? 'selected' : '' %>>Mediaworks</option>
+        <option value="More FM" <%= (brand == 'More FM') ? 'selected' : '' %>>More FM</option>
+        <option value="RadioLive" <%= (brand == 'RadioLive') ? 'selected' : '' %>>RadioLive</option>
+        <option value="RadioLive Sport" <%= (brand == 'RadioLive Sport') ? 'selected' : '' %>>RadioLive Sport</option>
+        <option value="Static" <%= (brand == 'Static') ? 'selected' : '' %>>Static</option>
+        <option value="The Breeze" <%= (brand == 'The Breeze') ? 'selected' : '' %>>The Breeze</option>
+        <option value="The Edge" <%= (brand == 'The Edge') ? 'selected' : '' %>>The Edge</option>
+        <option value="The Rock" <%= (brand == 'The Rock') ? 'selected' : '' %>>The Rock</option>
+        <option value="The Sound" <%= (brand == 'The Sound') ? 'selected' : '' %>>The Sound</option>
+        <option value="TV3" <%= (brand == 'TV3') ? 'selected' : '' %>>TV3 - FOUR</option>
       </select>
       <button class="destroy">Remove</button>
       <button class="close">Done</button>
@@ -247,7 +260,8 @@
       template: _.template($('#item-template').html()),
       render: function(){
         this.$el.html(this.template(this.model.toJSON()));
-        this.$el.addClass(this.model.attributes.brand);
+        var nspbrand = this.model.attributes.brand.replace(/\s/g,'');
+        this.$el.addClass(nspbrand);
         if(this.model.attributes.completed == true) {
           this.$el.addClass('completed');
         }
@@ -274,12 +288,13 @@
       close: function(){
         var value = this.input.val().trim();
         var newBrand = this.$('.brand').val();
+        var nspBrand = newBrand.replace(/\s/g,'');
         if(value) {
           this.model.save({title: value});
           this.model.save({brand: newBrand});
         }
         this.$el.removeClass();
-        this.$el.addClass(newBrand);
+        this.$el.addClass(nspBrand);
       },
 
       updateOnEnter: function(e){
