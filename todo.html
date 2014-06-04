@@ -171,11 +171,11 @@
   <script type="text/template" id="item-template">
     <div class="view">
       <input class="toggle" type="checkbox" <%= completed ? 'checked' : '' %>>
-      <label> <%- title %><span><%- brand %></span></label>
+      <label> <%- title %><span><%= brand %></span></label>
       <input class="edit" value="<%- title %>">
       <select class="brand">
         <option value="null" <%= brand ? '' : 'selected' %> disabled>Select...</option>
-        <option value="News" <%= (brand == 'News') ? 'selected' : '' %>>3 News</option>
+        <option value="3 News" <%= (brand == 'News') ? 'selected' : '' %>>3 News</option>
         <option value="Advertising" <%= (brand == 'Advertising') ? 'selected' : '' %>>Advertising</option>
         <option value="George FM" <%= (brand == 'George FM') ? 'selected' : '' %>>George FM</option>
         <option value="Kiwi FM" <%= (brand == 'Kiwi FM') ? 'selected' : '' %>>Kiwi FM</option>
@@ -260,7 +260,8 @@
       template: _.template($('#item-template').html()),
       render: function(){
         this.$el.html(this.template(this.model.toJSON()));
-        var nspbrand = this.model.attributes.brand.replace(/\s/g,'');
+        var nspbrand = this.model.attributes.brand.replace(/[0-9]/g,'');
+        nspbrand = nspbrand.replace(/\s/g,'');
         this.$el.addClass(nspbrand);
         if(this.model.attributes.completed == true) {
           this.$el.addClass('completed');
@@ -289,6 +290,7 @@
         var value = this.input.val().trim();
         var newBrand = this.$('.brand').val();
         var nspBrand = newBrand.replace(/\s/g,'');
+        nspBrand = nspBrand.replace(/[0-9]/g,'');
         if(value) {
           this.model.save({title: value});
           this.model.save({brand: newBrand});
